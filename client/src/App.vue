@@ -1,23 +1,16 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-
+import HeaderComponent from './components/HeaderComponent.vue'
+import FooterComponent from './components/FooterComponent.vue'
 </script>
 
 <template>
-  <header>
-    
+  
+  <div class="wrapper">
+    <HeaderComponent /> 
+    <FooterComponent /> 
+  </div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <button class="btn"><RouterLink to="/">Home</RouterLink></button>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
 </template>
 
 <style scoped>
