@@ -40,14 +40,14 @@ enum State {
 const fetchData = async () => {
    loading.value = true;
    try {
-      const response = await axios.get('http://localhost:4444/api/recipe/1');
+      const response = await axios.get('http://localhost:4444/api/recipe/');
       data.value = response.data;
 
    } catch (err: any) {
       error.value = err.message || 'Error fetching data';
    } finally {
       loading.value = false;
-      console.log(data)
+      console.log(data);
    }
 }
 
@@ -56,6 +56,7 @@ const addRecipe = () => {
    if (newRecipe.value?.name.trim() != undefined && data.value != undefined) {
       const newId  = Math.max(...data.value.map((item) => item.id), 0) + 1;
    }
+   axios.post('http://localhost:4444/api/recipe/', newRecipe.value);
 }
 
 
@@ -70,7 +71,7 @@ const deleteRecipe = (itemId: number) => {
 
 
 onMounted(fetchData);
-state.value = State.Create;
+state.value = State.ViewAll;
 console.log(state.value);
 
 
