@@ -1,14 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MainMenuComponent from './MainMenuComponent.vue';
+
+</script>
+
 
 <template>
-  <div>
-    <h1 class="jr">This is the Header</h1>
-  </div>
+  <header>
+    <h1>This is the Header</h1>
+    <MainMenuComponent />
+  </header>
 </template>
 
 <style scoped>
 
-.jr {
+header {
    background-color: aqua;
    color:red;
 }

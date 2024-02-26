@@ -1,20 +1,22 @@
 <script setup lang="ts">
-
-
-
 </script>
 
 <template>
-  <div> 
-    <p>
-      <router-link to="/"></router-link>
-      <router-link to="/about">About</router-link>
-      <router-link to="/bio">Bio</router-link>
-      <router-link to="/recipes">Recipes</router-link>         
-    </p>
-  </div>
-  
-  <router-view></router-view>
+  <nav id="header-links"> 
+      <router-link class="header-link" to="/">Home</router-link>
+      <router-link class="header-link" to="about">About</router-link>
+      <router-link class="header-link" to="bio">Bio</router-link>
+      <router-link class="header-link" to="recipes">Recipes</router-link>         
+  </nav>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .header-link {
+    padding: 10px;
+
+  }
+
+  .router-link-exact-active {
+    color: red;
+  }
+</style>

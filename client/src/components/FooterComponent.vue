@@ -1,13 +1,13 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>
+  <footer>
     <h1>This is the Footer</h1>
-  </div>
+  </footer>
 </template>
 
 <style scoped>
-.jr {
+footer {
    background-color: aqua;
    color:red;
 }
