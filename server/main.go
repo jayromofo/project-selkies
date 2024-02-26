@@ -28,6 +28,14 @@ func main() {
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 	}))
 
+	e.HTTPErrorHandler = func(err error, c echo.Context) {
+		if apiErr, ok := err.(APIError); ok {
+			c.JSON(apiErr.Status, map[string]any{"error": apiErr.Msg})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, map[string]any{"error": "internal server error"})
+	}
+
 	routes.GetRecipeRoutes(e)
 
 	e.GET("/sample", handleGetSample)
@@ -36,13 +44,15 @@ func main() {
 }
 
 func handleGetSample(c echo.Context) error {
-	// sample, err := GetPerson()
-	// if err != nil {
-	// 	return APIError{
-	// 		Status: http.StatusNotFound,
-	// 		Msg:    "User not found",
-	// 	}
-	// }
+	testmode := false
+	if testmode {
+		sample, err := GetPerson()
+		if err != nil {
+			return NotFoundError("User")
+		}
+		return c.JSON(http.StatusOK, sample)
+	}
+
 	sample := Person{}
 
 	sample.Id = 1
@@ -55,5 +65,6 @@ func handleGetSample(c echo.Context) error {
 }
 
 func GetPerson() (*Person, error) {
+
 	return nil, nil
 }

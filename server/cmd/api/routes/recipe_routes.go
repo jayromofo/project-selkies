@@ -6,7 +6,7 @@ import (
 )
 
 func GetRecipeRoutes(e *echo.Echo) {
-	e.PUT("/api/recipe/", handlers.AddRecipe)
+	e.POST("/api/recipe/create/", handlers.AddRecipe)
 	e.GET("/api/recipe/", handlers.ViewAllRecipes)
 	e.GET("/api/recipe/:id", handlers.ViewRecipe)
 	e.DELETE("/api/recipe/:id", handlers.DeleteRecipe)

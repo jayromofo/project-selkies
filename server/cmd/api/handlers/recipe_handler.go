@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,9 +20,9 @@ type RecipeCategory struct {
 }
 
 // var recipeSamples [5]Recipe
+var recipeSamples = make([]Recipe, 6)
 
 func SampleData() []Recipe {
-	var recipeSamples = make([]Recipe, 5)
 	recipeSamples[0] = Recipe{
 		Id:          1,
 		Name:        "Waffles",
@@ -66,10 +67,27 @@ func SampleData() []Recipe {
 }
 
 func AddRecipe(c echo.Context) error {
-	response := c.Param("id")
+	id, err := strconv.Atoi(c.QueryParam("id"))
+	if err != nil {
+		fmt.Println("Unable to find an id num")
+	}
+	if id == 0 {
+		id = 1
+	}
+	fmt.Println("Adding Recipe: ", id)
+
+	newRecipe := Recipe{
+		Id:          id,
+		Name:        c.QueryParam("name"),
+		Description: c.QueryParam("description"),
+		Type:        c.QueryParam("type"),
+		Category:    c.QueryParam("category"),
+	}
+
 	fmt.Println("Maybe it worked?")
-	fmt.Printf("%s", response)
-	return c.JSON(http.StatusOK, response)
+	recipeSamples = append(recipeSamples, newRecipe)
+
+	return c.JSON(http.StatusOK, map[string]any{"status": "success", "msg": "Added to recipe list"})
 
 }
 
