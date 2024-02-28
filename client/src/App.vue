@@ -3,20 +3,19 @@ import { RouterLink, RouterView } from 'vue-router'
 import HeaderComponent from './components/HeaderComponent.vue'
 import FooterComponent from './components/FooterComponent.vue'
 import MainMenuComponent from './components/MainMenuComponent.vue';
+import MainLayout from './layouts/MainLayout.vue';
 </script>
 
 <template>
   
   <div class="wrapper">
-    <HeaderComponent /> 
-    <MainMenuComponent />
-    <FooterComponent /> 
+    <MainLayout />
   </div>
 
 </template>
 
 <style scoped>
-header {
+/* header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -76,5 +75,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
+} */
 </style>

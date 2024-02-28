@@ -16,5 +16,6 @@ import MainMenuComponent from './MainMenuComponent.vue';
 header {
    background-color: aqua;
    color:red;
+   width: 100%;
 }
 </style>

@@ -2,23 +2,28 @@
 <div class="input-wrap">
 <label>{{ label }}</label>
 <input 
-type="text" 
-:value="modelValue"
-:class="classValue"
-@input="handleInput"
+   :class="classValue"
+   :placeholder="label"
+   :value="modelValue"
+   
+   @input="$emit('update:modelValue', $event.target)"
 />
 </div>
 
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
+// @input="handleInput"
+
 defineProps({
    label: {
       type: String,
       default: '',
    },
    modelValue: {
-      type: String,
+      type: [ String, Number ],
       default: ''
    },
    classValue: {
@@ -27,6 +32,9 @@ defineProps({
    },
    
 })
+
+const textInput = ref("");
+
 
 const handleInput = (event: Event) => {
    const target = event.target as HTMLInputElement;
