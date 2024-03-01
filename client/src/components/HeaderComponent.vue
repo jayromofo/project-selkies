@@ -6,7 +6,7 @@ import MainMenuComponent from './MainMenuComponent.vue';
 
 <template>
   <header>
-    <h1>This is the Header</h1>
+    <h1 class="text-3xl font-bold underline">This is the Header</h1>
     <MainMenuComponent />
   </header>
 </template>
