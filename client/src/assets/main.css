@@ -1,6 +1,10 @@
 @import './base.css';
 @import './buttons.css';
-@import './cards.css';
+@import './cards.css'; 
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 #app {
   max-width: 1080px;
