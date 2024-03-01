@@ -1,25 +1,34 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type {RouteRecordRaw} from 'vue-router';
 
-import RecipeModule from '@/modules/recipes/RecipeModule.vue';
+/* Import Routes */
 import recipeRoute from '@/modules/recipes/router';
-import MainLayout from '@/layouts/MainLayout.vue';
 import budgetRoute from '@/modules/budget/router';
+
+/* Import Pages */
 import UHome from '@/pages/UHome.vue';
 
 
+/* Create Routes*/
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
-    component: MainLayout,   
+    redirect: "/home",
+    children: [
+      {
+        path: '',
+        component: UHome
+      },
+      {
+        path: '/home',
+        name: 'home',
+        component: UHome
+      },
+    ],
   },
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (About.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import('../views/AboutView.vue'),      
   },
   {
@@ -41,6 +50,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('../views/AboutView.vue')
+  },
+  {
+    path: '/:pathMatch(.*)',       
+    component: () => import('../pages/404-not-found.vue')
   },
 ];
 

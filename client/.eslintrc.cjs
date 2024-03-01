@@ -16,6 +16,5 @@ module.exports = {
   rules: {
     'react/jsx-pascal-case': 'off',
     'vue/tsx-pascal-case': 'off',
-    
   }
 }

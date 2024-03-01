@@ -1,29 +1,37 @@
 import type { RouteRecordRaw } from 'vue-router'
 const Module = () => import('../RecipeModule.vue');
-const Home = () => import('../views/Home.vue');
-const Recipe = () => import('../views/Recipes.vue');
+const Home = () => import('../views/HomeView.vue');
+const Recipe = () => import('../views/RecipesView.vue');
 
 const recipeRoute: Array<RouteRecordRaw> = [
    {
       path: '/recipes',
-      name: 'recipes',
       components: {
-        default: Module,
-        mainContent: Module, 
-   },
-   children: [
-      {
-         path: '/',
-         component: Home
+         default: Module,
+         recipeContent: Module
       },
+      children: [
+         {
+            path: '',
+            name: 'home',
+            components: {
+               // default: Home,
+               recipeContent: Home
+            }
+         },
+         {
+            path: ':id',
+            components: {
+               // default: Recipe,
+               recipeContent: Recipe
+            }
+         }
 
-      {
-         path: ':id',
-         component: Recipe
-      }
-   ]
+      ]
+   },
    
-}];
+   
+];
 
 export default recipeRoute
 

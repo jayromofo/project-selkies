@@ -1,6 +1,6 @@
 <template>
    <main>
-      This is Home
+      This is Budget Home
    </main>
 </template>
 

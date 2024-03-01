@@ -1,7 +1,7 @@
 <template>
-   <div>
-      <h1>This is home</h1>
-   </div>  
+   <main>
+      This is a budget id
+   </main>
 </template>
 
 <script setup lang="ts">

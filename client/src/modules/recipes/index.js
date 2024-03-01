@@ -1,4 +1,4 @@
-import recipeRoute from "./router/index.js";
+import recipeRoute from "./router/index.ts";
 
 export default {
    recipeRoute

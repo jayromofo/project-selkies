@@ -1,7 +1,9 @@
 <template>
-   <main>
-      This is Recipes
-   </main>
+   <div>
+      This is a recipe
+
+   </div>
+
 </template>
 
 <script setup lang="ts">

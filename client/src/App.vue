@@ -8,10 +8,18 @@ import MainLayout from './layouts/MainLayout.vue';
 
 <template>
   
-  <div class="wrapper">
+  <!-- <div class="wrapper">
     <MainLayout />
-  </div>
+  </div> -->
 
+  <HeaderComponent />
+  <div id="main-layout">
+
+      <router-view></router-view>
+
+  </div>
+  <FooterComponent />
+      
 </template>
 
 <style scoped>
