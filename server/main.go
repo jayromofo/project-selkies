@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/jayromofo/project-selkies/server/cmd/api/routes"
+	"github.com/jayromofo/project-selkies/server/cmd/api/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -38,6 +39,10 @@ func main() {
 
 	routes.GetRecipeRoutes(e)
 	routes.GetBudgetRoutes(e)
+	r := service.Repository{}
+	info := service.InitializeDatabase()
+	println(info)
+	r.Connect(*info)
 
 	e.GET("/sample", handleGetSample)
 	e.Logger.Fatal(e.Start(":4444"))
