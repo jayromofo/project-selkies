@@ -22,3 +22,6 @@ go.work
 
 # Environment
 *.env
+
+# Backend Vite
+*server/.vite

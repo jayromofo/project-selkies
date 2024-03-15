@@ -31,7 +31,7 @@ func InitializeDatabase() *DBInfo {
 	}
 
 	host := os.Getenv("HOST")
-	user := os.Getenv("USERNAME")
+	user := os.Getenv("DBUSER")
 	password := os.Getenv("PASSWORD")
 	dbname := os.Getenv("DBNAME")
 	port := "5432"
@@ -47,8 +47,8 @@ func InitializeDatabase() *DBInfo {
 
 func (r *Repository) Connect(info DBInfo) {
 
-	connString := fmt.Sprintf("host=%s user=jasonr password=%s dbname=%s port=%s sslmode=disable",
-		info.Host, info.Password, info.DBName, info.Port,
+	connString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		info.Host, info.User, info.Password, info.DBName, info.Port,
 	)
 
 	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{})

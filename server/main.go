@@ -40,11 +40,9 @@ func main() {
 	routes.GetRecipeRoutes(e)
 	routes.GetBudgetRoutes(e)
 	r := service.Repository{}
-	info := service.InitializeDatabase()
-	println(info)
+	info := service.InitializeDatabase() /* TODO: Change this called inside Connect */
 	r.Connect(*info)
 
-	e.GET("/sample", handleGetSample)
 	e.Logger.Fatal(e.Start(":4444"))
 
 }
@@ -60,12 +58,6 @@ func handleGetSample(c echo.Context) error {
 	}
 
 	sample := Person{}
-
-	sample.Id = 1
-	sample.Name = "Jason Rossetti"
-	sample.Email = "jayromofo@gmail.com"
-	sample.Profession = "Programmer"
-	sample.Age = 36
 
 	return c.JSON(http.StatusOK, sample)
 }
