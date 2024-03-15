@@ -1,6 +1,6 @@
 <template>
    <div class="container col-md-6">
-      <form>
+      <!-- <form>
          <BaseInput 
             v-model="recipe.title"
             label="Recipe Name"
@@ -10,7 +10,8 @@
          />
          <button>Button</button>
 
-      </form>  
+      </form>   -->
+      This is home view
    </div>
 </template>
 

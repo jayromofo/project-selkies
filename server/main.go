@@ -37,6 +37,7 @@ func main() {
 	}
 
 	routes.GetRecipeRoutes(e)
+	routes.GetBudgetRoutes(e)
 
 	e.GET("/sample", handleGetSample)
 	e.Logger.Fatal(e.Start(":4444"))

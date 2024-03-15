@@ -15,14 +15,14 @@ const recipeRoute: Array<RouteRecordRaw> = [
             path: '',
             name: 'home',
             components: {
-               // default: Home,
+               default: Home,
                recipeContent: Home
             }
          },
          {
             path: ':id',
             components: {
-               // default: Recipe,
+               default: Recipe,
                recipeContent: Recipe
             }
          }
