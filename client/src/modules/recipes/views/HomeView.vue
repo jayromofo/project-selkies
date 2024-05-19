@@ -10,8 +10,8 @@
          />
          <button>Button</button>
 
-      </form>   -->
-      This is home view
+      </form>   -->  
+      <button class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button>
    </div>
 </template>
 

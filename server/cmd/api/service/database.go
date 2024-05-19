@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type DBInfo struct {
@@ -45,13 +47,23 @@ func InitializeDatabase() *DBInfo {
 	}
 }
 
-func (r *Repository) Connect(info DBInfo) {
+func (r *Repository) Connect(info DBInfo) error {
 
 	connString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		info.Host, info.User, info.Password, info.DBName, info.Port,
 	)
 
-	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             time.Second,
+			LogLevel:                  logger.Info,
+			IgnoreRecordNotFoundError: true,
+			Colorful:                  true,
+		},
+	)
+
+	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{Logger: newLogger})
 
 	if err != nil {
 		panic("failed to connect to database")
@@ -60,5 +72,6 @@ func (r *Repository) Connect(info DBInfo) {
 	fmt.Println("You connected to ", info.DBName)
 
 	r.DB = db
+	return nil
 
 }

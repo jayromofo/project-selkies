@@ -40,8 +40,10 @@ func main() {
 	routes.GetRecipeRoutes(e)
 	routes.GetBudgetRoutes(e)
 	r := service.Repository{}
+	// rec := handlers.RecipeRepository{}
 	info := service.InitializeDatabase() /* TODO: Change this called inside Connect */
 	r.Connect(*info)
+	// rec.InitDb()
 
 	e.Logger.Fatal(e.Start(":4444"))
 

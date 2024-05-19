@@ -1,6 +1,6 @@
 <template>
    <div>
-      <router-view name="recipeContent"></router-view>      
+      <router-view name="recipeContent"></router-view>            
    </div>
 </template>
 
