@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/jayromofo/project-selkies/server/cmd/api/handlers"
 	"github.com/jayromofo/project-selkies/server/cmd/api/routes"
 	"github.com/jayromofo/project-selkies/server/cmd/api/service"
 	"github.com/labstack/echo/v4"
@@ -40,10 +41,10 @@ func main() {
 	routes.GetRecipeRoutes(e)
 	routes.GetBudgetRoutes(e)
 	r := service.Repository{}
-	// rec := handlers.RecipeRepository{}
+	rec := handlers.RecipeRepository{}
 	info := service.InitializeDatabase() /* TODO: Change this called inside Connect */
 	r.Connect(*info)
-	// rec.InitDb()
+	rec.InitDb()
 
 	e.Logger.Fatal(e.Start(":4444"))
 

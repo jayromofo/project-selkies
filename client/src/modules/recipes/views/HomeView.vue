@@ -1,6 +1,28 @@
 <template>
-   <div class="container col-md-6">
-      <!-- <form>
+   <div class="">
+
+      <table class="border border-separate border-spacing-2 border-slate-500">
+         <thead>
+            <tr>
+               <th>Recipe Name</th>
+               <th>Description</th>
+               <th>Category</th>
+            </tr>
+         </thead>
+<!--  
+         <tbody>
+            <tr v-for="recipe in recipes" :key="recipe.id">
+               <td>{{recipe.name}}</td>
+               <td>{{recipe.description}}</td>
+               <td>{{recipe.category}}</td>
+            </tr>
+         </tbody>
+-->   
+      </table>
+
+
+      <!--
+      <form>
          <BaseInput 
             v-model="recipe.title"
             label="Recipe Name"
@@ -10,19 +32,50 @@
          />
          <button>Button</button>
 
-      </form>   -->  
-      <button class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button>
+      </form>    
+   -->
+      <button id="btnCreate" v-on:click="createRecipe" class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button>
    </div>
 </template>
 
 <script setup lang="ts">
-import  BaseInput  from "@/components/BaseInput.vue"
-import {ref} from 'vue';
+// import  BaseInput  from "@/components/BaseInput.vue"
+import { ref, onMounted } from 'vue';
+import axios from "axios";
 
-const recipe = ref({title: '', description: '', cook_time: 0})
+const recipes = ref<RecipeType[]>([]);
+
+interface RecipeType {
+   name: string;
+   description: string;
+   category: string;
+}
+
+const createRecipe = () => {
+   console.log('create recipe');
+}
 
 
+const fetchRecipes = async () => {
+   try {
+      const response = await axios.get<RecipeType[]>("http://localhost:4444/api/recipe/");
+      const data = response.data;
 
+      data.forEach((recipe: RecipeType) => {
+         console.log(recipe.name);
+         
+      });
+
+      recipes.value = data;
+
+   } catch (error) {
+      console.error("Error fetching data: ", error);
+   }
+} /* fetchRecipes */
+
+   onMounted(() =>  {
+      fetchRecipes();
+   });
 
 </script>
 

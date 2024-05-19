@@ -1,11 +1,12 @@
 import type { RouteRecordRaw } from 'vue-router'
-import CreateRecipe from '../views/CreateRecipe.vue';
+// const CreateRecipe = () => import('../views/CreateRecipe.vue');
 const Module = () => import('../RecipeModule.vue');
 const Home = () => import('../views/HomeView.vue');
 const Recipe = () => import('../views/RecipesView.vue');
 
 const recipeRoute: Array<RouteRecordRaw> = [
    {
+      // Base path
       path: '/recipes',
       components: {
          default: Module,
@@ -21,20 +22,21 @@ const recipeRoute: Array<RouteRecordRaw> = [
             }
          },
          {
+         path: '/create',
+            name: 'create',
+            component: () => import('../views/CreateRecipe.vue')
+            // components: {
+            //    default: CreateRecipe,
+            //    recipeContent: CreateRecipe
+            // }
+         },
+         {
             path: ':id',
             components: {
                default: Recipe,
                recipeContent: Recipe
             }
          },
-         {
-         path: '/create',
-            name: 'create',
-            components: {
-               default: CreateRecipe,
-               recipeContent: CreateRecipe
-            }
-         }
 
       ]
    },

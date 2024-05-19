@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"strconv"
 
 	"github.com/jayromofo/project-selkies/server/cmd/api/service"
 	"github.com/labstack/echo/v4"
@@ -17,37 +16,37 @@ type RecipeRepository struct {
 
 type Recipe struct {
 	gorm.Model
-	Id          int    `json:'id' gorm:"primaryKey"`
-	Name        string `json:'name' gorm:"size:64"`
-	Description string `json:'desc' gorm:"size:255"`
-	Type        string `json:'type' gorm:"size:64"`
-	Category    string `json:'category' gorm:"size:64"`
+	Id          int    `json:"id" gorm:"primaryKey"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	Category    string `json:"category"`
 }
 
 type RecipeCategory struct {
 	gorm.Model
-	Id          int    `gorm:"primaryKey"`
-	Name        string `gorm:"size:255"`
-	Description string `gorm:"size:255"`
+	Id          int    `json:"id" gorm:"primaryKey"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type MetaData struct {
 	gorm.Model
-	Id           int
-	RecipeId     int
-	Servings     int
-	CookTime     int
-	IsKeto       bool
-	IsVegetarian bool
-	Tags         string
-	ImagePath    string
+	Id           int    `json:"id" gorm:"primaryKey"`
+	RecipeId     int    `json:"recipe_id" gorm:"foreignKey"`
+	Servings     int    `json:"servings"`
+	CookTime     int    `json:"cook_time"`
+	IsKeto       bool   `json:"is_keto"`
+	IsVegetarian bool   `json:"is_vegetarian"`
+	Tags         string `json:"tags"`
+	ImagePath    string `json:"image_page"`
 }
 
 type RecipeInstruction struct {
-	Id          int
-	RecipeId    int
-	LineNum     int
-	Instruction string
+	Id          int    `json:"id" gorm:"primaryKey"`
+	RecipeId    int    `json:"recipe_id" gorm:"foreignKey"`
+	LineNum     int    `json:"line_num"`
+	Instruction string `json:"instruction"`
 }
 
 /* Global */
@@ -119,14 +118,8 @@ func AddRecipe2(c echo.Context) {
 }
 
 func AddRecipe(c echo.Context) error {
-	id, err := strconv.Atoi(c.QueryParam("id"))
-	if err != nil {
-		fmt.Println("Unable to find an id num")
-	}
-	if id == 0 {
-		id = 1
-	}
-	fmt.Println("Adding Recipe: ", id)
+
+	fmt.Println("Adding Recipe: ")
 
 	newRecipe := Recipe{
 		Id:          rand.Intn(1000000-1) + 1,
@@ -164,13 +157,14 @@ func GetRecipeById(c echo.Context) error {
 func (r *RecipeRepository) GetRecipeById(c echo.Context) error {
 	id := c.Param("id")
 	recipeModel := &Recipe{}
-	if id == "1" {
+	if id == "test" {
 		c.JSON(http.StatusInternalServerError, map[string]any{
 			"status":  "fail",
 			"message": "id cannot be empty",
 		})
 		return nil
 	}
+
 	fmt.Println("the ID is", id)
 
 	err := r.repo.DB.Where("id = ?", id).First(recipeModel).Error
@@ -192,9 +186,36 @@ func ViewAllRecipes(c echo.Context) error {
 }
 
 func DeleteRecipe(c echo.Context) error {
+	// Get the id parameter
+	id := c.Param("id")
+
+	fmt.Printf("Deleting id: %s \n", id)
+
+	//
+	fmt.Print("Deleting Recipe")
 	return nil
 }
 
 func EditRecipe(c echo.Context) error {
-	return nil
+	// Get the id parameter
+	id := c.Param("id")
+
+	fmt.Print("Editing Recipe")
+
+	// Find the record data and fill it with the model
+
+	// Overwrite the data and send it back to the database
+
+	if id == "666" {
+		c.JSON(http.StatusInternalServerError, map[string]any{
+			"status":  "Editing Recipe",
+			"message": "NomNOm",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status":  "success",
+		"message": "updated",
+	})
+
 }
