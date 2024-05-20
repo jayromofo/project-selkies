@@ -1,14 +1,20 @@
 <template>
-   <div class="">
+   <div class="container">
+      <h1>Recipe List</h1>
+      <NewRecipe @addRecipe="addRecipe"/>
+      <RecipeList :recipes="recipes" />
 
-      <table class="border border-separate border-spacing-2 border-slate-500">
-         <thead>
-            <tr>
-               <th>Recipe Name</th>
-               <th>Description</th>
-               <th>Category</th>
-            </tr>
-         </thead>
+      <!-- 
+         <table class="border border-separate border-spacing-2 border-slate-500">
+            <thead>
+               <tr>
+                  <th>Recipe Name</th>
+                  <th>Description</th>
+                  <th>Category</th>
+               </tr>
+            </thead>
+
+       -->
 <!--  
          <tbody>
             <tr v-for="recipe in recipes" :key="recipe.id">
@@ -18,7 +24,6 @@
             </tr>
          </tbody>
 -->   
-      </table>
 
 
       <!--
@@ -39,16 +44,22 @@
 </template>
 
 <script setup lang="ts">
-// import  BaseInput  from "@/components/BaseInput.vue"
 import { ref, onMounted } from 'vue';
 import axios from "axios";
 
-const recipes = ref<RecipeType[]>([]);
+import { NewRecipe, RecipeList } from '../components';
 
-interface RecipeType {
+const recipes = ref<Recipe[]>([]);
+
+interface Recipe {
+   id: number;
    name: string;
    description: string;
    category: string;
+}
+
+const addRecipe = (newRecipe: Recipe) => {
+   recipes.value.push(newRecipe);
 }
 
 const createRecipe = () => {
@@ -58,10 +69,10 @@ const createRecipe = () => {
 
 const fetchRecipes = async () => {
    try {
-      const response = await axios.get<RecipeType[]>("http://localhost:4444/api/recipe/");
+      const response = await axios.get<Recipe[]>("http://localhost:4444/api/recipe/");
       const data = response.data;
 
-      data.forEach((recipe: RecipeType) => {
+      data.forEach((recipe: Recipe) => {
          console.log(recipe.name);
          
       });
@@ -81,12 +92,53 @@ const fetchRecipes = async () => {
 
 <style scoped>
 .container {
-   background-color: brown;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: blue;
+  margin-top: 60px;
 }
 
-.tb-5 {
-   background-color: blue;
-   color: orange;
-   /* width:50%; */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+div {
+  margin-bottom: 10px;
+}
+
+label {
+  margin-right: 10px;
+}
+
+input, textarea {
+  padding: 8px;
+  font-size: 16px;
+  width: 300px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 16px;
+  border-bottom: 1px solid #ccc;
+}
+
+h2 {
+  margin: 0;
+}
+
+p {
+  margin: 5px 0;
 }
 </style>

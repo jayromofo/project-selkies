@@ -101,19 +101,32 @@ func SampleData() []Recipe {
 func (r *RecipeRepository) InitDb() {
 	info := service.InitializeDatabase()
 	err := r.repo.Connect(*info)
+
+	recRepo = r
 	if err != nil {
 		panic("Unable to initialize database")
 	}
 	dbMigrate(r)
 
 	fmt.Println("Recipe Repos Migrated")
+
 }
 
 func dbMigrate(r *RecipeRepository) {
 	r.repo.DB.AutoMigrate(&Recipe{}, &RecipeCategory{}, &MetaData{}, &RecipeInstruction{})
 }
 
-func AddRecipe2(c echo.Context) {
+func AddRecipe2(c echo.Context) error {
+	var recipe Recipe
+	if err := c.Bind(&recipe); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	if err := recRepo.repo.DB.Create(&recipe).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusCreated, recipe)
 
 }
 
@@ -123,13 +136,14 @@ func AddRecipe(c echo.Context) error {
 
 	newRecipe := Recipe{
 		Id:          rand.Intn(1000000-1) + 1,
-		Name:        c.QueryParam("name"),
-		Description: c.QueryParam("description"),
-		Type:        c.QueryParam("type"),
-		Category:    c.QueryParam("category"),
+		Name:        c.Param("name"),
+		Description: c.Param("description"),
+		Type:        c.Param("type"),
+		Category:    c.Param("category"),
 	}
 
 	fmt.Println("Maybe it worked?")
+	fmt.Printf("Name: %s, Category: %s", newRecipe.Name, newRecipe.Category)
 	recipeSamples = append(recipeSamples, newRecipe)
 
 	return c.JSON(http.StatusOK, map[string]any{"status": "success", "msg": "Added to recipe list"})
