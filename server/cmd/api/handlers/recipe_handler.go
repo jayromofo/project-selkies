@@ -116,6 +116,8 @@ func dbMigrate(r *RecipeRepository) {
 	r.repo.DB.AutoMigrate(&Recipe{}, &RecipeCategory{}, &MetaData{}, &RecipeInstruction{})
 }
 
+// Add recipe via createRecipe
+// http://localhost:4444/api/recipe/create
 func AddRecipe2(c echo.Context) error {
 	var recipe Recipe
 	if err := c.Bind(&recipe); err != nil {
@@ -206,6 +208,7 @@ func DeleteRecipe(c echo.Context) error {
 	fmt.Printf("Deleting id: %s \n", id)
 
 	//
+	recRepo.repo.DB.Delete(&Recipe{}, id)
 	fmt.Print("Deleting Recipe")
 	return nil
 }
