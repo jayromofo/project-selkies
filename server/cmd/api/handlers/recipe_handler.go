@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"math/rand"
 	"net/http"
 
 	"github.com/jayromofo/project-selkies/server/cmd/api/service"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type RecipeRepository struct {
@@ -16,24 +16,25 @@ type RecipeRepository struct {
 
 type Recipe struct {
 	gorm.Model
-	Id          int    `json:"id" gorm:"primaryKey"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Type        string `json:"type"`
-	Category    string `json:"category"`
+	Name         string              `json:"name" gorm:"primaryIndex`
+	Description  string              `json:"description"`
+	Type         string              `json:"type"`
+	Category     string              `json:"category"`
+	Instructions []RecipeInstruction `gorm:"foreignKey:RecipeId"`
+	MetaData     RecipeMetaData      `gorm:"foreignKey:RecipeId"`
 }
 
 type RecipeCategory struct {
 	gorm.Model
-	Id          int    `json:"id" gorm:"primaryKey"`
+	Id          uint   `json:"id" gorm:"primaryKey"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
 
-type MetaData struct {
+type RecipeMetaData struct {
 	gorm.Model
-	Id           int    `json:"id" gorm:"primaryKey"`
-	RecipeId     int    `json:"recipe_id" gorm:"foreignKey"`
+	// Id           uint   `json:"id" gorm:"primaryKey"`
+	RecipeId     uint   `json:"recipe_id" gorm:"not null;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"` // Foreign key referring to Recipe.ID
 	Servings     int    `json:"servings"`
 	CookTime     int    `json:"cook_time"`
 	IsKeto       bool   `json:"is_keto"`
@@ -43,18 +44,20 @@ type MetaData struct {
 }
 
 type RecipeInstruction struct {
-	Id          int    `json:"id" gorm:"primaryKey"`
-	RecipeId    int    `json:"recipe_id" gorm:"foreignKey"`
+	gorm.Model
+	// Id          uint   `json:"id" gorm:"primaryKey"`
+	RecipeId    uint   `json:"recipe_id" gorm:"not null;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"` // Foreign key referring to Recipe.ID
 	LineNum     int    `json:"line_num"`
 	Instruction string `json:"instruction"`
 }
 
 /* Global */
 var recRepo *RecipeRepository
+var recipes []Recipe
 
-// var recipeSamples [5]Recipe
 var recipeSamples = make([]Recipe, 6)
 
+/*
 func SampleData() []Recipe {
 	recipeSamples[0] = Recipe{
 		Id:          1,
@@ -97,6 +100,7 @@ func SampleData() []Recipe {
 	}
 	return recipeSamples
 }
+*/
 
 func (r *RecipeRepository) InitDb() {
 	info := service.InitializeDatabase()
@@ -107,13 +111,33 @@ func (r *RecipeRepository) InitDb() {
 		panic("Unable to initialize database")
 	}
 	dbMigrate(r)
+	dbPreload(r)
 
-	fmt.Println("Recipe Repos Migrated")
+	// CreateFullRecipe(r)
+
+	// Print out the recipes
+
+	for _, recipe := range recipes {
+		println("Recipe:", recipe.Name)
+		println("Description:", recipe.Description)
+		println("Type:", recipe.Type)
+		println("Category:", recipe.Category)
+		println("Metadata: Servings:", recipe.MetaData.Servings, "CookTime:", recipe.MetaData.CookTime, "Tags:", recipe.MetaData.Tags)
+		for _, instruction := range recipe.Instructions {
+			println("Instruction:", instruction.LineNum, instruction.Instruction)
+		}
+	}
 
 }
 
 func dbMigrate(r *RecipeRepository) {
-	r.repo.DB.AutoMigrate(&Recipe{}, &RecipeCategory{}, &MetaData{}, &RecipeInstruction{})
+	r.repo.DB.AutoMigrate(&Recipe{}, &RecipeCategory{}, &RecipeMetaData{}, &RecipeInstruction{})
+	fmt.Println("Recipe Repos Migrated")
+}
+
+func dbPreload(r *RecipeRepository) {
+	r.repo.DB.Preload("Instructions").Preload("MetaData").Find(&recipes)
+	fmt.Println("Recipes, Instructions, and MetaData preloaded")
 }
 
 // Add recipe via createRecipe
@@ -137,7 +161,6 @@ func AddRecipe(c echo.Context) error {
 	fmt.Println("Adding Recipe: ")
 
 	newRecipe := Recipe{
-		Id:          rand.Intn(1000000-1) + 1,
 		Name:        c.Param("name"),
 		Description: c.Param("description"),
 		Type:        c.Param("type"),
@@ -154,7 +177,6 @@ func AddRecipe(c echo.Context) error {
 
 func ViewRecipe(c echo.Context) error {
 	r := Recipe{
-		Id:          1,
 		Name:        "Waffles",
 		Description: "Beautiful Savory Waffles",
 		Type:        "Breakfast",
@@ -171,8 +193,20 @@ func GetRecipeById(c echo.Context) error {
 }
 
 func (r *RecipeRepository) GetRecipeById(c echo.Context) error {
+
+	type Payload struct {
+		recipePayload      Recipe
+		metadataPayload    RecipeMetaData
+		instructionPayload RecipeInstruction
+	}
+
 	id := c.Param("id")
+	payload := Payload{}
+
 	recipeModel := &Recipe{}
+	// metadataModel := &RecipeMetaData{}
+	// instructionsModel := &RecipeInstruction{}
+
 	if id == "test" {
 		c.JSON(http.StatusInternalServerError, map[string]any{
 			"status":  "fail",
@@ -191,14 +225,35 @@ func (r *RecipeRepository) GetRecipeById(c echo.Context) error {
 		})
 		return err
 	}
-	return c.JSON(http.StatusOK, recipeModel)
+
+	// err = r.repo.DB.Where("recipe_id = ?", id).First(metadataModel).Error
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, map[string]any{
+	// 		"status":  "fail",
+	// 		"message": "book unavailable",
+	// 	})
+	// 	return err
+	// }
+
+	/*
+		err = r.repo.DB.Where("recipe_id = ?", id).(metadataModel).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, map[string]any{
+				"status":  "fail",
+				"message": "book unavailable",
+			})
+			return err
+		}
+	*/
+
+	return c.JSON(http.StatusOK, payload)
 
 }
 
 func ViewAllRecipes(c echo.Context) error {
-	r := SampleData()
+	// r := SampleData()
 
-	return c.JSON(http.StatusOK, r)
+	return c.JSON(http.StatusOK, &recipes)
 }
 
 func DeleteRecipe(c echo.Context) error {
@@ -233,6 +288,56 @@ func EditRecipe(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]any{
 		"status":  "success",
 		"message": "updated",
+	})
+
+}
+
+func GetInstructionById(c echo.Context) error {
+	return nil
+}
+
+func GetMetadataById(c echo.Context) error {
+	return nil
+}
+
+// func CreateFullRecipe(c echo.Context) error {
+// 	return recRepo.CreateFullRecipe(c)
+// }
+
+// This works to create a recipe transaction
+// Now find a way to create it via form
+func CreateFullRecipe(r *RecipeRepository) {
+	r.repo.DB.Transaction(func(tx *gorm.DB) error {
+		newRecipe := Recipe{
+			Name:        "Food Sample 1",
+			Description: "This is a description of Food Sample 1",
+			Type:        "Supper",
+			Category:    "Supper",
+			MetaData: RecipeMetaData{
+				Servings:     4,
+				CookTime:     20,
+				IsKeto:       false,
+				IsVegetarian: false,
+				Tags:         "Italian, Pasta",
+				ImagePath:    "/images/food-sample-1.jpeg",
+			},
+			Instructions: []RecipeInstruction{
+				{LineNum: 1, Instruction: "Boil water in a large pot."},
+				{LineNum: 2, Instruction: "Cook spaghetti until al dente."},
+				{LineNum: 3, Instruction: "Fry pancetta in a pan."},
+				{LineNum: 4, Instruction: "Mix eggs and cheese in a bowl."},
+				{LineNum: 5, Instruction: "Combine spaghetti, pancetta, and egg mixture."},
+			},
+		}
+
+		if err := tx.Clauses(clause.OnConflict{
+			Columns:      []clause.Column{{Name: "name"}},
+			DoUpdates:    clause.AssignmentColumns([]string{"description", "type", "category"}),
+			OnConstraint: "recipes_pkey",
+		}).Create(&newRecipe).Error; err != nil {
+			return err
+		}
+		return nil
 	})
 
 }

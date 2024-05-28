@@ -32,10 +32,12 @@ const recipeRoute: Array<RouteRecordRaw> = [
          },
          {
             path: ':id',
+            name: 'RecipeDetail',
             components: {
                default: Recipe,
                recipeContent: Recipe
-            }
+            },
+            props: true
          },
 
       ]
