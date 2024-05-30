@@ -1,14 +1,20 @@
 <template>
-   <div class="container">
-      <h1>Recipe List</h1>
+   <div class="container-create">
+      <h1>Create a recipe</h1>
       <NewRecipe @addRecipe="addRecipe"/>
-      <RecipeList :recipes="recipes" />
-
-     
-      <button id="btnCreate" v-on:click="createRecipe" class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button>
-
-      <button id="sample form" class='btn' :onClick="showSample">Show Sample </button>
    </div>
+   <div class="container mx-auto px-4 py-8">
+      <h1>Recipe List</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+         <RecipeList v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
+      </div>
+   </div>
+   <div>
+      <button id="sample form" class='btn' :onClick="showSample">Show Sample </button>
+
+   </div> 
+     
+      <!-- <button id="btnCreate" v-on:click="createRecipe" class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button> -->
 
    <div v-if="isVisible" class="sampleContainer" >     
       <div class="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md">
@@ -64,28 +70,29 @@ const handleSomething = () => {
 
 }
 
-
 /* http://localhost:4444/api/recipe/*/
 const fetchRecipes = async () => {
    try {
       const response = await axios.get<Recipe[]>("http://localhost:4444/api/recipe/");
       const data = response.data;
 
+      console.log(response.data);
+      
       data.forEach((recipe: Recipe) => {
          console.log(recipe.name);
          
       });
-
+      
       recipes.value = data;
 
    } catch (error) {
       console.error("Error fetching data: ", error);
    }
-} /* fetchRecipes */
+}  /* fetchRecipes */ 
 
-   onMounted(() =>  {
-      fetchRecipes();
-   });
+onMounted(() =>  {
+   fetchRecipes();
+});
 
 </script>
 

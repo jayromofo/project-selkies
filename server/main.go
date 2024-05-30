@@ -49,23 +49,3 @@ func main() {
 	e.Logger.Fatal(e.Start(":4444"))
 
 }
-
-func handleGetSample(c echo.Context) error {
-	testmode := false
-	if testmode {
-		sample, err := GetPerson()
-		if err != nil {
-			return NotFoundError("User")
-		}
-		return c.JSON(http.StatusOK, sample)
-	}
-
-	sample := Person{}
-
-	return c.JSON(http.StatusOK, sample)
-}
-
-func GetPerson() (*Person, error) {
-
-	return nil, nil
-}

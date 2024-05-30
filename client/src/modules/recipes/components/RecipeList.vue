@@ -1,6 +1,18 @@
 <template>
-<div style="background-color: white;">
-   <div class="recipe-container">
+<div class="max-w-sm rounded overflow-hidden shadow-lg">
+    <img class="w-full" src="/src/assets/imgs/Throne.jpg" :alt="recipe.name">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">
+         <button @click="navigateToDetail" > {{ recipe.name }}</button>
+      </div>
+      <p class="text-gray-700 text-base">{{ recipe.description }}</p>
+    </div>
+    <div class="px-6 pt-4 pb-2">
+      <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ recipe.category }}</span>
+    </div>
+</div> 
+   <!--
+   <div v-if="!test" class="recipe-container">
       <ul>
          <li v-for="(recipe, index) in recipes" :key="recipe.id">
          <h2> {{ recipe.name }}</h2>
@@ -13,10 +25,17 @@
          </li>
       </ul>
    </div>
-</div>
+</div> 
+-->
+<!--^^  default ^^-->
 </template>
 
 <script setup lang="ts">
+import axios from 'axios';
+import {ref, onMounted } from "vue";
+import { useRoute, useRouter } from 'vue-router';
+
+// const test = true;
 
 interface Recipe {
    id: number;
@@ -26,13 +45,17 @@ interface Recipe {
 }
 
 const props = defineProps<{
-   recipes: Recipe;
+   recipe: Recipe;
 }>();
 
-console.log(props);
+const route = useRoute();
+const router = useRouter();
+const recipeId = ref();
 
-
-
+recipeId.value = route.params.ID;
+const navigateToDetail = () => {
+   router.push({name: 'RecipeDetail', params: {id: recipeId.value}})
+}
 
 </script>
 
