@@ -10,7 +10,7 @@ func GetRecipeRoutes(e *echo.Echo) {
 	// e.POST("/api/recipe/createSample/", handlers.CreateFullRecipe)
 	e.GET("/api/recipe/", handlers.ViewAllRecipes)
 	// e.GET("/api/recipe/:id", handlers.ViewRecipe)
-	e.GET("/api/recipe/:id", handlers.GetRecipeById)
+	e.GET("/api/recipe/:id", handlers.GetRecipeById1)
 	e.GET("/api/recipe/:id/instructions", handlers.GetInstructionById)
 	e.GET("/api/recipe/:id/metadata", handlers.GetMetadataById)
 	e.DELETE("/api/recipe/:id", handlers.DeleteRecipe)

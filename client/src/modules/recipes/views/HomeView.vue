@@ -1,7 +1,8 @@
 <template>
    <div class="container-create">
-      <h1>Create a recipe</h1>
-      <NewRecipe @addRecipe="addRecipe"/>
+      <button @click="handleCreateRecipe">Create a recipe</button>
+      
+      <NewRecipe v-if="showCreateRecipe" @addRecipe="addRecipe"/>
    </div>
    <div class="container mx-auto px-4 py-8">
       <h1>Recipe List</h1>
@@ -42,15 +43,16 @@ import { ref, onMounted } from 'vue';
 import axios from "axios";
 
 import { NewRecipe, RecipeList } from '../components';
+import type {Recipe} from "../../../types/recipeTypes";
+
 
 const recipes = ref<Recipe[]>([]);
 const isVisible = ref(false);
+const showCreateRecipe = ref(false);
+ 
 
-interface Recipe {
-   id: number;
-   name: string;
-   description: string;
-   category: string;
+const handleCreateRecipe = () => {
+   showCreateRecipe.value = !showCreateRecipe.value;
 }
 
 const addRecipe = (newRecipe: Recipe) => {

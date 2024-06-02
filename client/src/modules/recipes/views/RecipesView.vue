@@ -1,7 +1,12 @@
 <template>
    <div>
-      This is a recipe
-      {{ recipe?.name }}
+      <h1>{{ recipe?.name }} </h1>
+      <p>{{ recipe?.description }}</p>
+      <h2>Instructions</h2>      
+      <ul>
+         <li v-for="instruction in recipe?.Instructions" :key="instruction.line_num">{{ instruction.line_num }} : {{ instruction.instruction }}</li>
+      </ul>
+
 
    </div>
 
@@ -11,56 +16,98 @@
 import {ref, onMounted} from 'vue';
 import {useRoute} from 'vue-router';
 import axios from 'axios';
+import type {Recipe, RecipeInstruction, MetaData} from "../../../types/recipeTypes";
 
-
-interface Recipe {
-   id: number;
-   name: string;
-   description: string;
-   category: string;   
+declare global {
+   interface Window {
+      recipe: Recipe | undefined;
+   }
 }
 
-interface MetaData {
-   id: number;
-   recipeId: number;
-   servings: number;
-   cooktime: number;
-   isKeto: boolean;
-   isVegetarian: boolean;
-   tags: string[];
-   imagePath: string;
-}
+var recJSON = {};
 
-interface RecipeInstruction {
-   id: number;
-   recipeId: number;
-   lineNum: number;
-   instruction: string;
-}
+// interface Recipe {
+//    ID: number;
+//    name: string;
+//    description: string;
+//    category: string;   
+// }
+
+// interface MetaData {
+//    id: number;
+//    recipeId: number;
+//    servings: number;
+//    cooktime: number;
+//    isKeto: boolean;
+//    isVegetarian: boolean;
+//    tags: string[];
+//    imagePath: string;
+// }
+
+// interface RecipeInstruction {
+//    id: number;
+//    recipeId: number;
+//    lineNum: number;
+//    instruction: string;
+// }
 
 const route = useRoute();
 const recipe = ref<Recipe | null>(null);
-const recipeMetadata = ref<MetaData | null>(null);
-const recipeInstructions = ref<RecipeInstruction | null>(null);
+const metadata = ref<MetaData | null>(null);
+const instructions = ref<RecipeInstruction[]>([]);
 
-
-onMounted(async () => {
-   const recipeId = route.params.id;
-   console.log('id: '+ recipeId);
-   try{
+/*
       const [recipeResponse, instructionsResponse, metadataResponse] = await Promise.all([
          axios.get(`http://localhost:4444/api/recipe/${recipeId}`),
          axios.get(`http://localhost:4444/api/recipe/${recipeId}/instructions`),
          axios.get(`http://localhost:4444/api/recipe/${recipeId}/metadata`),
       ]);
-      recipe.value = recipeResponse.data;
-      recipeInstructions.value = instructionsResponse.data;
-      recipeMetadata.value = metadataResponse.data;
+*/
+
+interface BackEndResponse {
+   recipe: Recipe, 
+   instruction: RecipeInstruction,
+   metaData: MetaData
+}
+
+onMounted(async () => {
+   const recipeId = route.params.id;
+   console.log('id: '+ recipeId);
+   try{
+      const response = await axios.get<Recipe>(`http://localhost:4444/api/recipe/${recipeId}`); 
+   
+      recipe.value = response.data;
+         // instructions.value = response.data.instructions;
+         // metadata.value = response.data.Metadata;      
+      window.recipe = recipe.value;  
+
+      if (recipe.value)
+         console.log(recipe.value);
+      
+   } catch (error) {
+      console.error("Error fetching recipe data", error);
+   }
+
+});
+
+/*
+onMounted(async () => {
+   const recipeId = route.params.id;
+   console.log('id: '+ recipeId);
+   try{
+      const recipeResponse = await axios.get(`http://localhost:4444/api/recipe/${recipeId}`);
+      
+      recipe.value = recipeResponse.data.recipe;
+      metadata.value = recipeResponse.data.metadata;
+      instructions.value = recipeResponse.data.instructions;
 
    } catch (error) {
       console.error("Error fetching recipe data", error);
    }
+
+   console.log(recipe);
 });
+*/
 
 
 </script>

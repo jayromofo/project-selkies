@@ -40,7 +40,7 @@ type RecipeMetaData struct {
 	IsKeto       bool   `json:"is_keto"`
 	IsVegetarian bool   `json:"is_vegetarian"`
 	Tags         string `json:"tags"`
-	ImagePath    string `json:"image_page"`
+	ImagePath    string `json:"image_path"`
 }
 
 type RecipeInstruction struct {
@@ -184,70 +184,81 @@ func ViewRecipe(c echo.Context) error {
 	}
 
 	// id := c.Param("id")
+	// id := c.Param("id")
 
 	return c.JSON(http.StatusOK, r)
 }
 
-func GetRecipeById(c echo.Context) error {
-	return recRepo.GetRecipeById(c)
+func GetRecipeById1(c echo.Context) error {
+	return recRepo.GetRecipeById2(c)
 }
 
-func (r *RecipeRepository) GetRecipeById(c echo.Context) error {
-
-	type Payload struct {
-		recipePayload      Recipe
-		metadataPayload    RecipeMetaData
-		instructionPayload RecipeInstruction
-	}
+func (r *RecipeRepository) GetRecipeById1(c echo.Context) error {
 
 	id := c.Param("id")
-	payload := Payload{}
 
-	recipeModel := &Recipe{}
-	// metadataModel := &RecipeMetaData{}
-	// instructionsModel := &RecipeInstruction{}
-
-	if id == "test" {
-		c.JSON(http.StatusInternalServerError, map[string]any{
-			"status":  "fail",
-			"message": "id cannot be empty",
-		})
-		return nil
-	}
+	recipeModel := Recipe{}
 
 	fmt.Println("the ID is", id)
 
-	err := r.repo.DB.Where("id = ?", id).First(recipeModel).Error
+	err := r.repo.DB.Preload("instructions").Preload("metadata").First(&recipeModel, "recipeId").Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]any{
 			"status":  "fail",
-			"message": "book unavailable",
+			"message": "unable to find recipe",
 		})
 		return err
 	}
 
-	// err = r.repo.DB.Where("recipe_id = ?", id).First(metadataModel).Error
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, map[string]any{
-	// 		"status":  "fail",
-	// 		"message": "book unavailable",
-	// 	})
-	// 	return err
-	// }
+	return c.JSON(http.StatusOK, recipeModel)
+}
 
-	/*
-		err = r.repo.DB.Where("recipe_id = ?", id).(metadataModel).Error
-		if err != nil {
-			c.JSON(http.StatusBadRequest, map[string]any{
-				"status":  "fail",
-				"message": "book unavailable",
-			})
-			return err
-		}
-	*/
+func GetRecipeById2(c echo.Context) error {
+	return recRepo.GetRecipeById2(c)
+}
 
-	return c.JSON(http.StatusOK, payload)
+func (r *RecipeRepository) GetRecipeById2(c echo.Context) error {
 
+	recipeId := c.Param("id")
+	limit := 50
+
+	recipeModel := Recipe{}
+	metadataModel := RecipeMetaData{}
+	instructionsModel := []RecipeInstruction{}
+
+	fmt.Println("the ID is", recipeId)
+
+	err := r.repo.DB.First(&recipeModel, recipeId).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]any{
+			"status":  "fail",
+			"message": "unable to find recipe",
+		})
+		return err
+	}
+
+	err = r.repo.DB.First(&metadataModel, "recipe_id = ?", recipeId).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]any{
+			"status":  "fail",
+			"message": "unable to find recipe",
+		})
+		return err
+	}
+
+	err = r.repo.DB.Where("recipe_id = ?", recipeId).Limit(limit).Find(&instructionsModel).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]any{
+			"status":  "fail",
+			"message": "unable to find recipe",
+		})
+		return err
+	}
+
+	recipeModel.MetaData = metadataModel
+	recipeModel.Instructions = instructionsModel
+
+	return c.JSON(http.StatusOK, recipeModel)
 }
 
 func ViewAllRecipes(c echo.Context) error {

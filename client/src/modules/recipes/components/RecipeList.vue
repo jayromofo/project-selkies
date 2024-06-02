@@ -3,7 +3,7 @@
     <img class="w-full" src="/src/assets/imgs/Throne.jpg" :alt="recipe.name">
     <div class="px-6 py-4">
       <div class="font-bold text-xl mb-2">
-         <button @click="navigateToDetail" > {{ recipe.name }}</button>
+         <button><router-link :to="`/recipes/${recipe.ID}`">{{ recipe.name }} ID: {{recipe.ID}}</router-link></button>
       </div>
       <p class="text-gray-700 text-base">{{ recipe.description }}</p>
     </div>
@@ -34,15 +34,13 @@
 import axios from 'axios';
 import {ref, onMounted } from "vue";
 import { useRoute, useRouter } from 'vue-router';
+import type {Recipe} from "../../../types/recipeTypes";
+
+
 
 // const test = true;
 
-interface Recipe {
-   id: number;
-   name: string;
-   description: string;
-   category: string;
-}
+
 
 const props = defineProps<{
    recipe: Recipe;
@@ -52,9 +50,10 @@ const route = useRoute();
 const router = useRouter();
 const recipeId = ref();
 
-recipeId.value = route.params.ID;
-const navigateToDetail = () => {
-   router.push({name: 'RecipeDetail', params: {id: recipeId.value}})
+
+const navigateToDetail = (recipeid: number) => {
+   recipeId.value = route.params.id;
+   router.push({name: 'RecipeDetail', params: {id: recipeid}})
 }
 
 </script>
