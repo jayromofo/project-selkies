@@ -12,8 +12,6 @@ import PrimeVue from 'primevue/config'
 
 const pinia = createPinia();
 const app = createApp(App);
-const app = createApp(App)
-
 
 app.use(PrimeVue, {
    unstyled: true,
