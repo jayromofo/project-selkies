@@ -1,12 +1,12 @@
 <template>
+
+   <!-- Create a Recipe Section -->
    <div class="container-create">
       <button class="white bg-slate-400" @click="showCreate">Create a recipe</button>
       <NewRecipe v-if="isCreate" @addRecipe="addRecipe"/>
    </div>
 
-
-
-
+   <!-- Show the Recipe List -->
    <div v-if="!isCreate" class="container mx-auto px-4 py-8">
       <h1>Recipe List</h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -16,8 +16,7 @@
    <div>
       <button id="sample form" class='btn' :onClick="showSample">Show Sample </button>
 
-   </div> 
-     
+   </div>      
       <!-- <button id="btnCreate" v-on:click="createRecipe" class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button> -->
 
    <div v-if="isVisible" class="sampleContainer" >     
