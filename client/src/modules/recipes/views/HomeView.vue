@@ -1,10 +1,13 @@
 <template>
+
+   <!-- Create a Recipe Section -->
    <div class="container-create">
-      <button @click="handleCreateRecipe">Create a recipe</button>
-      
-      <NewRecipe v-if="showCreateRecipe" @addRecipe="addRecipe"/>
+      <button class="white bg-slate-400" @click="showCreate">Create a recipe</button>
+      <NewRecipe v-if="isCreate" @addRecipe="addRecipe"/>
    </div>
-   <div class="container mx-auto px-4 py-8">
+
+   <!-- Show the Recipe List -->
+   <div v-if="!isCreate" class="container mx-auto px-4 py-8">
       <h1>Recipe List</h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
          <RecipeList v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
@@ -13,8 +16,7 @@
    <div>
       <button id="sample form" class='btn' :onClick="showSample">Show Sample </button>
 
-   </div> 
-     
+   </div>      
       <!-- <button id="btnCreate" v-on:click="createRecipe" class="btn border-t-neutral-400"><a href="/recipes/create">Create a recipe</a></button> -->
 
    <div v-if="isVisible" class="sampleContainer" >     
@@ -48,12 +50,7 @@ import type {Recipe} from "../../../types/recipeTypes";
 
 const recipes = ref<Recipe[]>([]);
 const isVisible = ref(false);
-const showCreateRecipe = ref(false);
- 
-
-const handleCreateRecipe = () => {
-   showCreateRecipe.value = !showCreateRecipe.value;
-}
+const isCreate = ref(false);
 
 const addRecipe = (newRecipe: Recipe) => {
    recipes.value.push(newRecipe);
@@ -70,6 +67,10 @@ const showSample = () => {
 
 const handleSomething = () => {
 
+}
+
+const showCreate = () => {
+   isCreate.value = !isCreate.value;
 }
 
 /* http://localhost:4444/api/recipe/*/
