@@ -1,6 +1,8 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
+import { plugin, defaultConfig } from '@formkit/vue'
+
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config' 
@@ -13,6 +15,7 @@ import recipeModule from "./modules/recipes/RecipeModule.vue"
 import budgetModule from "./modules/budget/BudgetModule.vue"
 
 import { registerModules } from "./register-modules"
+import { defaultConfig } from '@formkit/vue';
 
 registerModules({
    budget: budgetModule,
@@ -27,5 +30,6 @@ app.use(PrimeVue, {
 })
 
 app.use(router)
+app.use(plugin, defaultConfig)
 
 app.mount('#app')

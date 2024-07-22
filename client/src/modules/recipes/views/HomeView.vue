@@ -1,9 +1,13 @@
 <template>
    <div class="container-create">
-      <h1>Create a recipe</h1>
-      <NewRecipe @addRecipe="addRecipe"/>
+      <button class="white bg-slate-400" @click="showCreate">Create a recipe</button>
+      <NewRecipe v-if="isCreate" @addRecipe="addRecipe"/>
    </div>
-   <div class="container mx-auto px-4 py-8">
+
+
+
+
+   <div v-if="!isCreate" class="container mx-auto px-4 py-8">
       <h1>Recipe List</h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
          <RecipeList v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
@@ -45,6 +49,7 @@ import { NewRecipe, RecipeList } from '../components';
 
 const recipes = ref<Recipe[]>([]);
 const isVisible = ref(false);
+const isCreate = ref(false);
 
 interface Recipe {
    id: number;
@@ -68,6 +73,10 @@ const showSample = () => {
 
 const handleSomething = () => {
 
+}
+
+const showCreate = () => {
+   isCreate.value = !isCreate.value;
 }
 
 /* http://localhost:4444/api/recipe/*/
