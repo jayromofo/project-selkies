@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type {RouteRecordRaw} from 'vue-router';
 
-/* Import Routes */
+/* Import Module Routes */
 import recipeRoute from '@/modules/recipes/router';
 import budgetRoute from '@/modules/budget/router';
 
@@ -58,6 +58,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 
+// Use this to hook up module routers
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: routes.concat(recipeRoute, budgetRoute) /* Add each module routes to here */ 

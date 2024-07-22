@@ -22,3 +22,10 @@ go.work
 
 # Environment
 *.env
+
+# Backend Vite
+*/.vite
+*server/.vite/*
+
+# Workspace File
+*.code-workspace

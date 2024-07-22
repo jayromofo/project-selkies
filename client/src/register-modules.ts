@@ -1,4 +1,3 @@
-import type { Router } from "vue-router";
 import router from "./router"
 // import store from "./store"
 
