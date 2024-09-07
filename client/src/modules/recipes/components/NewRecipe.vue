@@ -1,66 +1,4 @@
 <template>
- <FormKit
-    type="form"
-    id="registration-example"
-    :form-class="submitted ? 'hide' : 'show'"
-    submit-label="Register"
-    @submit="submitHandler"
-    :actions="false"
-    #default="{ value }"
-  >
-    <h1 class="text-2xl font-bold mb-2">Register!</h1>
-    <p class="text-sm mb-4">
-      You can put any type of element inside a form, not just FormKit inputs
-      (although only FormKit inputs are included with the submission).
-    </p>
-    <FormKit
-      type="text"
-      name="name"
-      label="Your name"
-      placeholder="Jane Doe"
-      help="What do people call you?"
-      validation="required"
-    />
-    <FormKit
-      type="text"
-      name="email"
-      label="Your email"
-      placeholder="jane@example.com"
-      help="What email should we use?"
-      validation="required|email"
-    />
-    <div class="double">
-      <FormKit
-        type="password"
-        name="password"
-        label="Password"
-        validation="required|length:6|matches:/[^a-zA-Z]/"
-        :validation-messages="{
-          matches: 'Please include at least one symbol',
-        }"
-        placeholder="Your password"
-        help="Choose a password"
-      />
-      <FormKit
-        type="password"
-        name="password_confirm"
-        label="Confirm password"
-        placeholder="Confirm password"
-        validation="required|confirm"
-        help="Confirm your password"
-      />
-    </div>
-
-    <FormKit type="submit" label="Register" />
-    <pre wrap>{{ value }}</pre>
-  </FormKit>
-  <div v-if="submitted">
-    <h2 class="text-xl text-green-500">Submission successful!</h2>
-  </div>
-
-
-
-
 
 
 <!-- Original Create -->
@@ -88,15 +26,15 @@
 
 import { ref } from 'vue';
 import axios from 'axios';
-import { FormKit } from '@formkit/vue';
-import { Recipe } from '@/types/recipeTypes';
+// import { FormKit } from '@formkit/vue';
+import type { Recipe } from '@/types/recipeTypes';
 
 const name = ref('');
 const description = ref('');
 const category = ref('');
 const isSubmitting = ref<boolean>(false);
 const errorMessage = ref<string | null>();
-const isOriginal = ref<boolean>(false)
+const isOriginal = ref<boolean>(true)
 
 const submitted = ref(false)
 const submitHandler = async () => {
@@ -134,7 +72,7 @@ function createCustomError(message: string, status: string,): CustomError {
 }
 
 function someFunction() {
-  throw createCustomError('Something went wrong', '400');
+   throw createCustomError('Something went wrong', '400');
 }
 
 
@@ -155,7 +93,8 @@ const submitRecipe = async () => {
       ID: Date.now(),
       name: name.value,
       description: description.value,
-      category: category.value
+      category: category.value,
+      type: "" ,
    };
 
    try {
