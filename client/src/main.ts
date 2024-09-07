@@ -1,25 +1,25 @@
+import 'vuestic-ui/styles/essential.css';
+import 'vuestic-ui/styles/typography.css';
 import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { plugin, defaultConfig } from '@formkit/vue';
+import { createVuestic } from 'vuestic-ui';
+// import "vuestic-ui/css"
 
 import App from './App.vue'
 import router from './router'
-import PrimeVue from 'primevue/config' 
 
 
 
 const pinia = createPinia();
 const app = createApp(App);
 
-app.use(PrimeVue, {
-   unstyled: true,
-})
-
 app.use(router)
 app.use(pinia);
 app.use(plugin, defaultConfig);
+app.use(createVuestic());
 
 
 app.mount('#app')
