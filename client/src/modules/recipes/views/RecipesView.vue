@@ -26,8 +26,7 @@
             </VaListItemSection>
          </VaListItem>
       </VaList>
-
-
+      
    </div>
 
 </template>
@@ -81,3 +80,13 @@ onMounted(async () => {
 });
 
 </script>
+
+<style scoped>
+.j-button{
+   padding-bottom: 10px;
+   border: solid red;
+   background-color: red;
+   color: white;
+
+}
+</style>
