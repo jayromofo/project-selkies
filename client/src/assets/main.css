@@ -1,13 +1,13 @@
 @import './base.css';
 @import './buttons.css';
-@import './cards.css'; 
+@import './cards.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 #app {
-  max-width: 1080px;
+  max-width: 1920px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;

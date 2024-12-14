@@ -11,12 +11,22 @@
 
          </span>
       </div>
-      <h2>Instructions</h2>      
-      <ul>
-         <li v-for="instruction in recipe?.Instructions" :key="instruction.Line_Num">{{ instruction.line_num }} : {{ instruction.instruction }}</li>
-      </ul>
-
-
+   
+      <VaList>
+         <VaListLable>Instructions</VaListLable>
+         <VaListItem
+            v-for="(instruction, index) in recipe?.Instructions"
+            :key="index"
+            class="list__item"
+            >
+            <VaListItemSection>
+               <VaListItemLabel>
+                  {{ instruction.line_num }} : {{ instruction.instruction }}
+               </VaListItemLabel>
+            </VaListItemSection>
+         </VaListItem>
+      </VaList>
+      
    </div>
 
 </template>
@@ -25,8 +35,9 @@
 import {ref, onMounted} from 'vue';
 import {useRoute} from 'vue-router';
 import axios from 'axios';
-import type {Recipe, RecipeInstruction, MetaData} from "../../../types/recipeTypes";
+import type {Recipe, RecipeInstruction, MetaData} from "@/types/recipeTypes";
 import { useRecipeStore } from '../stores/index';
+import { VaListItem, VaListItemSection } from 'vuestic-ui';
 
 
 var recJSON = {};
@@ -69,3 +80,13 @@ onMounted(async () => {
 });
 
 </script>
+
+<style scoped>
+.j-button{
+   padding-bottom: 10px;
+   border: solid red;
+   background-color: red;
+   color: white;
+
+}
+</style>
